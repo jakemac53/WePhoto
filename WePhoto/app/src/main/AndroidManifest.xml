@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.google.hackathon.wephoto" >
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -17,6 +19,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".HandleImageCapture"
+            android:label="@string/title_activity_handle_image_capture"
+            android:parentActivityName=".SelectMode" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.google.hackathon.wephoto.SelectMode" />
         </activity>
     </application>
 

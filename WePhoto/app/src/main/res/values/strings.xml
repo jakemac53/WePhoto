@@ -7,5 +7,6 @@
     <string name="photoMode">take photoz!</string>
     <string name="gallery">gallery</string>
     <string name="prevEvents">Old events</string>
-
+    <string name="uploadPictureLabel">Upload</string>
+    <string name="title_activity_handle_image_capture">Upload</string>
 </resources>

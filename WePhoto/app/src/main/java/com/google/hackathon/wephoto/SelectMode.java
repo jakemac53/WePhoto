@@ -4,11 +4,18 @@ import com.google.hackathon.wephoto.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.io.File;
 
 
 /**
@@ -18,6 +25,12 @@ import android.view.View;
  * @see SystemUiHider
  */
 public class SelectMode extends Activity {
+
+    private static final String TAG = "SelectMode";
+
+    private static final int ACTIVITY_REQUEST_CAPTURE = 1;
+    private static final int ACTIVITY_HANDLE_IMAGE_CAPTURE = 2;
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -157,4 +170,32 @@ public class SelectMode extends Activity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    //FIXME: This should probably go somewhere else
+    static public File getTmpImageFile() {
+        return new File(Environment.getExternalStorageDirectory(),  "wephoto_tmp.jpg");
+    }
+
+    public void takeAPicture(View view) {
+        Log.i(TAG, "takeAPicture");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTmpImageFile()));
+        startActivityForResult(intent, ACTIVITY_REQUEST_CAPTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTIVITY_REQUEST_CAPTURE && resultCode == RESULT_OK) {
+            Intent intent = new Intent(SelectMode.this, HandleImageCapture.class);
+            startActivityForResult(intent, ACTIVITY_HANDLE_IMAGE_CAPTURE);
+            return;
+        }
+        if (requestCode == ACTIVITY_HANDLE_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.i(TAG, "Handled image capture: " + requestCode);
+            return;
+        }
+        Log.i(TAG, "Unknown Activity Request code: " + requestCode);
+    }
+
+
 }
